@@ -1,25 +1,14 @@
 import { API } from "./config";
 import { loadResource } from "./photoloader";
+import { GalleryResponse } from "./types";
 
-let gallery: any;
+let gallery: GalleryResponse;
 
-export function load(): Promise<any> {
+export function load(): Promise<GalleryResponse> {
 
-    return loadResource(API + "/photos")
+    return loadResource<GalleryResponse>(API + "/photos")
 
-        .then((data) => {
-
-            gallery = data;
-
-            return data;
-        });
-}
-
-function getPage(name: string): Promise<any> {
-
-    return loadResource(gallery.links[name].href)
-
-        .then((data) => {
+        .then((data: GalleryResponse): GalleryResponse => {
 
             gallery = data;
 
@@ -27,22 +16,30 @@ function getPage(name: string): Promise<any> {
         });
 }
 
-export function next(): Promise<any> {
+function getPage(name: keyof GalleryResponse["links"]): Promise<GalleryResponse> {
 
+    return loadResource<GalleryResponse>(gallery.links[name].href)
+
+        .then((data: GalleryResponse): GalleryResponse => {
+
+            gallery = data;
+
+            return data;
+        });
+}
+
+export function next(): Promise<GalleryResponse> {
     return getPage("next");
 }
 
-export function prev(): Promise<any> {
-
+export function prev(): Promise<GalleryResponse> {
     return getPage("prev");
 }
 
-export function first(): Promise<any> {
-
+export function first(): Promise<GalleryResponse> {
     return getPage("first");
 }
 
-export function last(): Promise<any> {
-
+export function last(): Promise<GalleryResponse> {
     return getPage("last");
 }

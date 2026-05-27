@@ -5751,6 +5751,9 @@
     return fetch(url, {
       credentials: "include"
     }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Erreur HTTP : " + response.status);
+      }
       return response.json();
     });
   }
@@ -5869,55 +5872,35 @@
       ).then(displayComments);
     });
   }
+  function loadAndDisplayGallery(action) {
+    action().then((data) => {
+      displayGallery(data, getPicture);
+    });
+  }
   document.querySelector(
     "#load_gallery"
   ).addEventListener("click", () => {
-    load().then((data) => {
-      displayGallery(
-        data,
-        getPicture
-      );
-    });
+    loadAndDisplayGallery(load);
   });
   document.querySelector(
     "#next"
   ).addEventListener("click", () => {
-    next().then((data) => {
-      displayGallery(
-        data,
-        getPicture
-      );
-    });
+    loadAndDisplayGallery(next);
   });
   document.querySelector(
     "#prev"
   ).addEventListener("click", () => {
-    prev().then((data) => {
-      displayGallery(
-        data,
-        getPicture
-      );
-    });
+    loadAndDisplayGallery(prev);
   });
   document.querySelector(
     "#first"
   ).addEventListener("click", () => {
-    first().then((data) => {
-      displayGallery(
-        data,
-        getPicture
-      );
-    });
+    loadAndDisplayGallery(first);
   });
   document.querySelector(
     "#last"
   ).addEventListener("click", () => {
-    last().then((data) => {
-      displayGallery(
-        data,
-        getPicture
-      );
-    });
+    loadAndDisplayGallery(last);
   });
   document.querySelector(
     "#close_lightbox"

@@ -1,6 +1,4 @@
-import {
-    loadResource
-} from "./photoloader";
+import { loadResource } from "./photoloader";
 
 import {
     displayPicture,
@@ -16,31 +14,48 @@ import {
     last
 } from "./gallery";
 
+import { displayGallery } from "./gallery_ui";
+
 import {
-    displayGallery
-} from "./gallery_ui";
+    PhotoResponse,
+    CategorieResponse,
+    CommentsResponse,
+    GalleryResponse
+} from "./types";
 
 function getPicture(id: number): void {
 
-    loadResource(
+    loadResource<PhotoResponse>(
         "/www/canals5/phox/api/photos/" + id
     )
 
-        .then((data: any) => {
+        .then((data: PhotoResponse) => {
 
             displayPicture(data);
 
-            loadResource(
+            loadResource<CategorieResponse>(
                 data.links.categorie.href
             )
 
                 .then(displayCategory);
 
-            loadResource(
+            loadResource<CommentsResponse>(
                 data.links.comments.href
             )
 
                 .then(displayComments);
+        });
+}
+
+function loadAndDisplayGallery(
+    action: () => Promise<GalleryResponse>
+): void {
+
+    action()
+
+        .then((data: GalleryResponse) => {
+
+            displayGallery(data, getPicture);
         });
 }
 
@@ -51,16 +66,7 @@ function getPicture(id: number): void {
 )
 
     .addEventListener("click", () => {
-
-        load()
-
-            .then((data) => {
-
-                displayGallery(
-                    data,
-                    getPicture
-                );
-            });
+        loadAndDisplayGallery(load);
     });
 
 (
@@ -70,16 +76,7 @@ function getPicture(id: number): void {
 )
 
     .addEventListener("click", () => {
-
-        next()
-
-            .then((data) => {
-
-                displayGallery(
-                    data,
-                    getPicture
-                );
-            });
+        loadAndDisplayGallery(next);
     });
 
 (
@@ -89,16 +86,7 @@ function getPicture(id: number): void {
 )
 
     .addEventListener("click", () => {
-
-        prev()
-
-            .then((data) => {
-
-                displayGallery(
-                    data,
-                    getPicture
-                );
-            });
+        loadAndDisplayGallery(prev);
     });
 
 (
@@ -108,16 +96,7 @@ function getPicture(id: number): void {
 )
 
     .addEventListener("click", () => {
-
-        first()
-
-            .then((data) => {
-
-                displayGallery(
-                    data,
-                    getPicture
-                );
-            });
+        loadAndDisplayGallery(first);
     });
 
 (
@@ -127,16 +106,7 @@ function getPicture(id: number): void {
 )
 
     .addEventListener("click", () => {
-
-        last()
-
-            .then((data) => {
-
-                displayGallery(
-                    data,
-                    getPicture
-                );
-            });
+        loadAndDisplayGallery(last);
     });
 
 (
@@ -151,7 +121,5 @@ function getPicture(id: number): void {
             document.querySelector(
                 "#lightbox"
             ) as HTMLElement
-        )
-
-            .style.display = "none";
+        ).style.display = "none";
     });

@@ -1,9 +1,13 @@
 import Handlebars from "handlebars";
 import { WEBETU } from "./config";
+import {
+    GalleryResponse,
+    PhotoCallback
+} from "./types";
 
 export function displayGallery(
-    data: any,
-    callback: Function
+    data: GalleryResponse,
+    callback: PhotoCallback
 ): void {
 
     const source =
@@ -14,14 +18,11 @@ export function displayGallery(
     const template =
         Handlebars.compile(source);
 
-    const photos = data.photos.map((p: any) => {
+    const photos = data.photos.map((p) => {
 
         return {
-
             id: p.photo.id,
-
-            thumbnail:
-                WEBETU + p.photo.thumbnail.href
+            thumbnail: WEBETU + p.photo.thumbnail.href
         };
     });
 
@@ -43,11 +44,9 @@ export function displayGallery(
 
         img.addEventListener("click", () => {
 
-            const id =
-                Number(
-                    (img as HTMLElement)
-                        .dataset.id
-                );
+            const id = Number(
+                (img as HTMLElement).dataset.id
+            );
 
             callback(id);
         });
