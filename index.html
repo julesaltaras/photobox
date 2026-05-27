@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<title>TD7 Photobox</title>
+
+	<link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+
+	<h1>Galerie</h1>
+
+	<nav>
+		<button id="first">first</button>
+		<button id="prev">prev</button>
+		<button id="load_gallery">load</button>
+		<button id="next">next</button>
+		<button id="last">last</button>
+	</nav>
+
+	<section id="gallery_container"></section>
+
+	<div id="lightbox">
+
+		<button id="close_lightbox">X</button>
+
+		<div id="lightbox_content"></div>
+
+	</div>
+
+	<script id="photoTemplate" type="text/x-handlebars-template">
+
+        <img src="{{url}}" alt="{{titre}}">
+
+        <h2>{{titre}}</h2>
+
+        <p>{{description}}</p>
+
+        <p>{{type}} - {{width}} x {{height}}</p>
+
+        <h4 id="la_categorie"></h4>
+
+        <ul id="les_commentaires"></ul>
+
+    </script>
+
+	<script id="galleryTemplate" type="text/x-handlebars-template">
+
+        <div class="gallery">
+
+            {{#each photos}}
+
+                <img
+                    class="vignette"
+                    src="{{thumbnail}}"
+                    data-id="{{id}}">
+
+            {{/each}}
+
+        </div>
+
+    </script>
+
+	<script src="dist/index.js" defer></script>
+
+</body>
+
+</html>
